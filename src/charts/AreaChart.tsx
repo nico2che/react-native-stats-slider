@@ -7,7 +7,7 @@ import {
 import { AreaChart, ChartProps } from 'react-native-svg-charts';
 import * as shape from 'd3-shape';
 import { DefaultChartProps } from './types';
-import styled from '../components/styled-components';
+import { useRheostatTheme } from '../theme';
 
 const AnimatedAreaChart = Animated.createAnimatedComponent(
   AreaChart as ComponentClass<ChartProps<number>>,
@@ -38,7 +38,7 @@ const DefaultAreaChart = (props: DefaultChartProps) => {
   });
   const diffValue = Animated.add(pos, prevValue);
   return (
-    <View style={[style]}>
+    <View style={style as any}>
       <AreaChart
         style={{ height: '100%' }}
         data={data}
@@ -72,11 +72,15 @@ const DefaultAreaChart = (props: DefaultChartProps) => {
   );
 };
 
-const DefaultStyledAreaChart = styled(DefaultAreaChart).attrs((props) => ({
-  chartColor: props.chartColor || (props.theme.rheostat?.themeColor) || 'palevioletred',
-  backgroundColor: props.backgroundColor || (props.theme.rheostat?.grey) || '#d8d8d8',
-}))`
-   height: 100px;
-`;
+const ThemedAreaChart = (props: Omit<DefaultChartProps, 'chartColor' | 'backgroundColor'> & Partial<Pick<DefaultChartProps, 'chartColor' | 'backgroundColor'>>) => {
+  const theme = useRheostatTheme();
+  const chartColor = props.chartColor || theme.themeColor;
+  const backgroundColor = props.backgroundColor || theme.grey;
+  return (
+    <View style={[{ height: 100 }, props.style as any]}>
+      <DefaultAreaChart {...(props as any)} chartColor={chartColor} backgroundColor={backgroundColor} />
+    </View>
+  );
+};
 
-export default DefaultStyledAreaChart;
+export default ThemedAreaChart;

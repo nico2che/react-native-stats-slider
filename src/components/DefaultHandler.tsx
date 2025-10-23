@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleProp, TouchableHighlight, ViewStyle } from 'react-native';
-import styled from './styled-components';
+import { StyleProp, Text, TouchableHighlight, View, ViewStyle } from 'react-native';
+import { useRheostatTheme } from '../theme';
 
 type ButtonProps = {
   style?: StyleProp<ViewStyle>;
@@ -10,38 +10,43 @@ type ButtonProps = {
 type ButtonTextProps = {
   selected: boolean;
 };
-const RoundedButtonText = styled.Text.attrs<ButtonTextProps>((props) => ({
-  selected: props.selected || false,
-}))<ButtonTextProps>`
-   color: ${(props) => (props.selected ? 'white'
-    : (props.theme.rheostat?.themeColor) || 'palevioletred')};
-   font-size: 12px;
-   font-weight: 700;
-`;
 
 const RoundedButton = ({
   style, selected = false, children,
-}:ButtonProps) => (
-  <TouchableHighlight style={style} underlayColor="rgba(245,219,227,0.8)">
-    <RoundedButtonText selected={selected}>
-      {children}
-    </RoundedButtonText>
-  </TouchableHighlight>
-);
+}:ButtonProps) => {
+  const theme = useRheostatTheme();
+  return (
+    <TouchableHighlight style={style} underlayColor="rgba(245,219,227,0.8)">
+      <Text style={{ color: selected ? 'white' : theme.themeColor, fontSize: 12, fontWeight: '700' }}>
+        {children}
+      </Text>
+    </TouchableHighlight>
+  );
+};
 
-const DefaultHandler = styled(RoundedButton).attrs((props) => ({
-  selected: props.selected || false,
-}))`
-  background-color: ${(props) => (props.selected
-    ? (props.theme.rheostat?.themeColor) || 'palevioletred' : 'transparent')};
-  padding: 0;
-  height: 40px;
-  width: 40px;
-  display: flex;
-  border-radius: 20px;
-  justify-content: center;
-  align-items: center;
-  border: ${(props) => (props.theme.rheostat?.themeColor) || 'palevioletred'} solid 2px;
-`;
+const DefaultHandler = ({ style, selected = false, children }: ButtonProps) => {
+  const theme = useRheostatTheme();
+  return (
+    <View style={style}>
+      <RoundedButton
+        style={{
+          backgroundColor: 'transparent',
+          padding: 0,
+          height: 30,
+          width: 30,
+          borderRadius: 20,
+          justifyContent: 'center',
+          alignItems: 'center',
+          borderWidth: 2,
+          borderColor: theme.themeColor,
+          display: 'flex',
+        }}
+        selected={selected}
+      >
+        {children}
+      </RoundedButton>
+    </View>
+  );
+};
 
 export default DefaultHandler;

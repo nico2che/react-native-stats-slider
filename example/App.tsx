@@ -8,7 +8,7 @@
  * @format
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import {SafeAreaView, ScrollView, Text, View} from 'react-native';
 import Moment from 'moment';
 import Rheostat, {
@@ -45,8 +45,8 @@ const theme = {
 
 const App = () => {
   const {values, svgData, snapPoints} = defaultProps;
-  const [scrollEnabled, setScrollEnabled] = React.useState(true);
-  const [timeRange, setTimeRange] = React.useState<HandlersState>({
+  const [scrollEnabled, setScrollEnabled] = useState(true);
+  const [timeRange, setTimeRange] = useState<HandlersState>({
     values: [10, 80],
     min: 0,
     max: 100,

@@ -1,25 +1,31 @@
-import React from 'react';
-import { ThemeProviderProps } from 'styled-components';
-import { ThemeProvider } from './components/styled-components';
+import React, { createContext, useContext } from 'react';
 
-export const defaultTheme = {
+export type RheostatTheme = {
+  themeColor: string;
+  grey: string;
+};
+
+export const defaultTheme: RheostatTheme = {
   themeColor: 'palevioletred',
   grey: '#d8d8d8',
 };
 
-const RheostatThemeProvider = (props:ThemeProviderProps<object>) => {
-  const {
-    theme,
-    children,
-  } = props;
-  const rheostatTheme = {
-    rheostat: { ...defaultTheme, ...theme },
-    // Namespace the theme for the user
-  };
+export const RheostatThemeContext = createContext<RheostatTheme>(defaultTheme);
+
+export const useRheostatTheme = () => useContext(RheostatThemeContext);
+
+type RheostatThemeProviderProps = {
+  theme?: Partial<RheostatTheme>;
+  children: React.ReactNode;
+};
+
+const RheostatThemeProvider = (props: RheostatThemeProviderProps) => {
+  const { theme, children } = props;
+  const mergedTheme: RheostatTheme = { ...defaultTheme, ...(theme || {}) };
   return (
-    <ThemeProvider theme={rheostatTheme}>
+    <RheostatThemeContext.Provider value={mergedTheme}>
       {children}
-    </ThemeProvider>
+    </RheostatThemeContext.Provider>
   );
 };
 

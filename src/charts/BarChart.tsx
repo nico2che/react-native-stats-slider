@@ -6,7 +6,7 @@ import {
 } from 'react-native';
 import { BarChart } from 'react-native-svg-charts';
 import { DefaultChartProps } from './types';
-import styled from '../components/styled-components';
+import { useRheostatTheme } from '../theme';
 
 const DefaultBarChart = (props: DefaultChartProps) => {
   const {
@@ -33,7 +33,7 @@ const DefaultBarChart = (props: DefaultChartProps) => {
   });
   const diffValue = Animated.add(pos, prevValue);
   return (
-    <View style={[style]}>
+    <View style={style as any}>
       <BarChart
         style={{ height: '100%' }}
         data={data}
@@ -70,10 +70,15 @@ const DefaultBarChart = (props: DefaultChartProps) => {
   );
 };
 
-const DefaultStyledBarChart = styled(DefaultBarChart).attrs((props) => ({
-  chartColor: props.chartColor || (props.theme.rheostat?.themeColor) || 'palevioletred',
-  backgroundColor: props.backgroundColor || (props.theme.rheostat?.grey) || '#d8d8d8',
-}))`
-   height: 100px;
-`;
-export default DefaultStyledBarChart;
+const ThemedBarChart = (props: Omit<DefaultChartProps, 'chartColor' | 'backgroundColor'> & Partial<Pick<DefaultChartProps, 'chartColor' | 'backgroundColor'>>) => {
+  const theme = useRheostatTheme();
+  const chartColor = props.chartColor || theme.themeColor;
+  const backgroundColor = props.backgroundColor || theme.grey;
+  return (
+    <View style={[{ height: 100 }, props.style as any]}>
+      <DefaultBarChart {...(props as any)} chartColor={chartColor} backgroundColor={backgroundColor} />
+    </View>
+  );
+};
+
+export default ThemedBarChart;

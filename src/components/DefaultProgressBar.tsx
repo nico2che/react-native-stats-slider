@@ -1,10 +1,12 @@
-import styled from './styled-components';
+import React from 'react';
+import { View } from 'react-native';
+import { useRheostatTheme } from '../theme';
 
-const DefaultProgressBar = styled.View`
-   background-color: ${(props) => (props.theme.rheostat && props.theme.rheostat.themeColor) || 'palevioletred'};
-   /*position: absolute;*/
-   height: 4px;
-   /*top: 0;*/
-`;
+const DefaultProgressBar = () => {
+  const theme = useRheostatTheme();
+  return (
+    <View style={{ backgroundColor: theme.themeColor, height: 4 }} />
+  );
+};
 
 export default DefaultProgressBar;

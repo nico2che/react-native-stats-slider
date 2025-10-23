@@ -6,8 +6,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import React, {useEffect, useMemo, useRef, useState,} from 'react';
-import {DefaultTheme} from 'styled-components';
+import { memo, useEffect, useMemo, useRef, useState, type ElementType, type ReactNode } from 'react';
 import linear from '../algorithms/linear';
 import DefaultHandler from '../components/DefaultHandler';
 import {PERCENT_EMPTY, PERCENT_FULL, VERTICAL} from '../constants/SliderConstants';
@@ -33,19 +32,18 @@ type RheostatTypes = {
     getPosition: (value:number, min:number, max:number)=> number;
     getValue: (pos:number, min:number, max:number) => number;
   };
-  handle?: React.ElementType;
-  pitComponent?: React.ElementType;
+  handle?: ElementType;
+  pitComponent?: ElementType;
   pitPoints?: number[];
-  progressBar?: React.ElementType;
-  children?: React.ReactNode;
+  progressBar?: ElementType;
+  children?: ReactNode;
   snap?: boolean;
   snapPoints?: number[];
   values: number[];
   getNextHandlePosition?: null,
-  theme?: DefaultTheme,
   svgData?: number[],
 };
-const withRheostat = (ChartCompo: any = null) => React.memo((props: RheostatTypes) => {
+const withRheostat = (ChartCompo: any = null) => memo((props: RheostatTypes) => {
   const {
     progressBar: ProgressBar = DefaultProgressBar,
     handle: Handle = DefaultHandler,
@@ -60,7 +58,6 @@ const withRheostat = (ChartCompo: any = null) => React.memo((props: RheostatType
     snapPoints,
     children = null,
     svgData,
-    theme,
   } = props;
   let previousHandlePos: number[]; // logging start coords at start of each onPanResponderGrant
   const [handlePos, setHandlePos] = useState(() => inputValues.map((value) => new Animated.Value(
@@ -224,7 +221,6 @@ const withRheostat = (ChartCompo: any = null) => React.memo((props: RheostatType
         handlePos={handlePos}
         data={svgData}
         width={containerSize.width}
-        theme={theme}
       />
       )}
       {handlePos.map((value, idx) => {
@@ -243,7 +239,7 @@ const withRheostat = (ChartCompo: any = null) => React.memo((props: RheostatType
             renderToHardwareTextureAndroid
             key={`handle-${idx}`}
           >
-            <Handle style={[Style.handle]} theme={theme} />
+            <Handle style={[Style.handle]} />
           </Animated.View>
         );
       })}
@@ -262,7 +258,7 @@ const withRheostat = (ChartCompo: any = null) => React.memo((props: RheostatType
               renderToHardwareTextureAndroid
               style={[{ position: 'absolute', height: 'auto' }, getProgressStyle(idx)]}
             >
-              <ProgressBar theme={theme} />
+              <ProgressBar />
             </Animated.View>
           );
         })}
@@ -292,6 +288,7 @@ const Style = StyleSheet.create({
   },
   handle: {
     backgroundColor: 'white',
+    borderRadius: 20,
     width: '100%',
     height: '100%',
   },

@@ -1,7 +1,7 @@
 import withRheostat, { HandlersState } from './hoc/withRheostat';
 import AreaChart from './charts/AreaChart';
 import BarChart from './charts/BarChart';
-import RheostatThemeProvider from './theme';
+import RheostatThemeProvider, { RheostatThemeContext, defaultTheme, useRheostatTheme } from './theme';
 
 const Rheostat = withRheostat();
 
@@ -15,5 +15,8 @@ export {
   BarRheostat,
   withRheostat,
   RheostatThemeProvider,
+  RheostatThemeContext,
+  defaultTheme,
+  useRheostatTheme,
   HandlersState,
 };
